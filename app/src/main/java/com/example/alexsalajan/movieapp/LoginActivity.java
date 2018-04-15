@@ -29,6 +29,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.alexsalajan.movieapp.src.repository.MovieRepository;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +42,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
+    private MovieRepository movieRepository = new MovieRepository();
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -87,6 +91,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 attemptLogin();
+                try {
+                    movieRepository.getAllMovies();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
