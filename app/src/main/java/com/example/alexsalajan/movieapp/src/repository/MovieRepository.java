@@ -1,35 +1,45 @@
 package com.example.alexsalajan.movieapp.src.repository;
 
+import android.arch.persistence.room.Room;
+import android.content.Context;
+
 import com.example.alexsalajan.movieapp.src.model.Movie;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-public class MovieRepository extends Repo implements MovieRepositoryI {
-    @Override
-    public void getAllMovies() throws SQLException {
+public class MovieRepository {
+    private MovieDAO movieDAO;
+    private AppDatabase db;
 
-        List<Movie> movies = new ArrayList<>();
+    public MovieRepository(Context context) {
+        db = Room.databaseBuilder(context,
+                AppDatabase.class, "database-name").allowMainThreadQueries()
+                .build();
 
-        ResultSet rs = selectQuery("SELECT * FROM movie");
-//        ResultSet rs = selectQuery("SELECT * FROM movie m, user_movie um WHERE m.idmovie = um.idmovie");
-
-        while (rs.next()) {
-            Movie movie = new Movie();
-            movie.setIdMovie(rs.getInt("idmovie"));
-            movie.setDescription(rs.getString("description"));
-//            movie.setIdUser_rating(new HashMap<Integer, Double>(idUser, rating));
-            movies.add(movie);
-        }
-        connection.close();
-
-        for (int i = 0; i < movies.size(); i++) {
-            System.out.println(movies.get(i).getDescription());
-        }
-//        return movies;
-
+        movieDAO = db.MovieDAO();
     }
+
+    public List<Movie> getAllMovies() {
+        List<Movie> movies = new ArrayList<>();
+        Movie[] moviesFromDB = movieDAO.getAllMovies();
+        for (Movie movie : moviesFromDB)
+            movies.add(movie);
+        return movies;
+    }
+
+    public void deleteMovie(int idMovie){
+        movieDAO.deleteMovie(idMovie);
+    }
+
+    public  void updateMovie(Movie movie){
+        movieDAO.updateMovie(movie);
+    }
+
+    public void addMovie(Movie movie){
+        movieDAO.insertMovie(movie);
+    }
+
+
 }

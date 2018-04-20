@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.alexsalajan.movieapp.src.model.Movie;
 import com.example.alexsalajan.movieapp.src.repository.MovieRepository;
 
 import java.sql.SQLException;
@@ -73,6 +74,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+
+        MovieRepository movieRepository = new MovieRepository(getApplicationContext());
+        Movie movie1 = new Movie(1,"superman", "foarte tare frate", "Action",10,"true");
+        movieRepository.addMovie(movie1);
+
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
